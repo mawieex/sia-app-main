@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+transformers
+sentencepiece
+protobuf 
+sacremoses
+langdetect
+pymongo
+torch
+motor
+
