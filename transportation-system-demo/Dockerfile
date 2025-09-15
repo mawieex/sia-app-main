@@ -1,35 +1,32 @@
-# Multi-stage build for React app
-FROM node:20-alpine as build
+# Stage 1: Build React app
+FROM node:20-alpine AS build
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files
-COPY transportation-system-demo/package*.json ./
+COPY package*.json ./
 
-# Install all dependencies (including dev dependencies for build)
+# Install dependencies
 RUN npm ci
 
-# Copy source code
-COPY transportation-system-demo/ .
+# Copy the rest of the source code
+COPY . .
 
-# Copy locales to the expected location
+# Copy locales folder if it exists
 COPY locales ./locales
 
 # Build the app
 RUN npm run build
 
-# Production stage with nginx
+# Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Copy built app to nginx
+# Copy build output to Nginx html folder
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy nginx configuration
-# COPY transportation-system-demo/nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port
+# Expose default HTTP port
 EXPOSE 80
 
-# Start nginx
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
