@@ -1,39 +1,39 @@
-# --------------------------
-# Stage 1: Build React app
-# --------------------------
+# ---------- Stage 1: Build React App ----------
 FROM node:20-alpine AS build
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json first for caching
-COPY transportation-system-demo/package*.json ./
+# Copy package.json and package-lock.json first (for caching)
+COPY package*.json ./
 
 # Install dependencies
 RUN npm ci
 
-# Copy the rest of your source code
-COPY transportation-system-demo/ ./
+# Copy all source code
+COPY . .
 
-# Copy locales if needed
+# Ensure locales folder is in the expected location
+# Adjust paths if needed
 COPY locales ./locales
 
-# Build the app for production
+# Build the app
 RUN npm run build
 
-# --------------------------
-# Stage 2: Production with Nginx
-# --------------------------
+# ---------- Stage 2: Production Nginx ----------
 FROM nginx:alpine
 
-# Remove default nginx HTML
+# Remove default Nginx HTML
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy built React app from previous stage
+# Copy built app from build stage
 COPY --from=build /app/dist /usr/share/nginx/html
+
+# Optional: copy custom Nginx config if you have one
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
 
-# Start nginx
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
