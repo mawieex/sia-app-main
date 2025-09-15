@@ -20,14 +20,15 @@ COPY locales ./locales
 RUN npm run build
 
 # Stage 2: Serve with Nginx
-# Production stage with nginx
+# Use nginx as base
 FROM nginx:alpine
 
-# Copy built app to nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy the built React app
+COPY dist /usr/share/nginx/html
 
-# Expose port
+# Expose port 80
 EXPOSE 80
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
+
