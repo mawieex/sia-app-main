@@ -23,7 +23,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy build output to Nginx html folder
-COPY --from=build /app/dist /usr/share/nginx/html
+#COPY --from=build /app/dist /usr/share/nginx/html
 
 # Expose default HTTP port
 EXPOSE 80
