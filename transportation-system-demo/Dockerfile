@@ -20,13 +20,14 @@ COPY locales ./locales
 RUN npm run build
 
 # Stage 2: Serve with Nginx
+# Production stage with nginx
 FROM nginx:alpine
 
-# Copy build output to Nginx html folder
-#COPY --from=build /app/dist /usr/share/nginx/html
+# Copy built app to nginx
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose default HTTP port
+# Expose port
 EXPOSE 80
 
-# Start Nginx
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
