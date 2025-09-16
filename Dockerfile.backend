@@ -18,7 +18,6 @@ RUN pip install --no-cache-dir --prefer-binary -r requirements.txt
 
 # Copy app code
 COPY app.py .
-COPY locales/ ./locales/
 
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app \
